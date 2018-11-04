@@ -169,10 +169,12 @@ Navigation.mergeOptions(this.props.componentId, {
   rootBackgroundImage: require('rootBackground.png'),
   topBar: {
     barStyle: 'default' | 'black',
-    translucent: true,
-    transparent: false,
+    background: {
+      color: 'white',
+      translucent: true,
+      blur: false
+    }
     noBorder: false,
-    blur: false,
     backButton: {
       title: 'Back',
       showTitle: false
@@ -237,6 +239,7 @@ Navigation.mergeOptions(this.props.componentId, {
     }
   },
   bottomTabs: {
+    elevation: 8, // BottomTabs elevation in dp
     titleDisplayMode: 'alwaysShow' | 'showWhenActive' | 'alwaysHide' // Sets the title state for each tab.
   },
   bottomTab: {
@@ -254,6 +257,25 @@ If you'd like to use a custom font, you'll first have to edit your project.
 * Android - add the `.ttf` or `.otf` files to `src/main/assets/fonts/`
 
 * iOS - follow this [guide](https://medium.com/@dabit3/adding-custom-fonts-to-react-native-b266b41bff7f)
+
+## Custom tab icons
+
+* Android - add cooresponding resoltion icons into folders in android/app/src/main/res.
+For example, icon_name.png in each drawable-x folder.
+* iOS - drag and drop to Images.xcassets in Xcode.
+For example, image set icon_name in Images.xcassets with x1, x2, x3.
+
+Then, the tab icon can be defined by following syntax:
+
+```js
+bottomTab: {
+  icon: {
+    uri: 'icon_name',
+    ...
+  },
+  ...
+}
+```
 
 ## Customizing screen animations
 Animation used for navigation commands that modify the layout hierarchy can be controlled in options. Animations can be modified per command and it's also possible to change the default animation for each command.
@@ -280,17 +302,12 @@ The following properties can be animated:
 }
 ```
 
-For example, changing the animation used when the app is first launched:
+For example, changing the animation used when the app is first launched (Supported only on Android):
 ```js
 Navigation.setDefaultOptions({
   animations: {
-    startApp: {
-      y: {
-        from: 1000,
-        to: 0,
-        duration: 500,
-        interpolation: 'accelerate',
-      },
+    setRoot: {
+      enabled: 'true' | 'false', // Optional, used to enable/disable the animation
       alpha: {
         from: 0,
         to: 1,
@@ -306,7 +323,7 @@ Navigation.setDefaultOptions({
 ## Customizing navigation commands animation
 
 Animations for the following set of commands can be customized
-* startApp
+* setRoot
 * push
 * pop
 * showModal
@@ -319,6 +336,7 @@ When *pushing* and *popping* screens to and from a stack, you can control the To
 ```js
 animations: {
   push: {
+    enabled: 'true' | 'false', // Optional, used to enable/disable the animation
     topBar: {
       id: 'TEST', // Optional, id of the TopBar we'd like to animate.
       alpha: {
@@ -338,6 +356,9 @@ animations: {
         to: 1
       }
     }
+  },
+  pop: {
+    ...
   }
 }
 ```
